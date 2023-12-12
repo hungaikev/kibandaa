@@ -21,6 +21,12 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
+// Defines values for LivenessStatus.
+const (
+	DOWN LivenessStatus = "DOWN"
+	UP   LivenessStatus = "UP"
+)
+
 // Defines values for OrderStatus.
 const (
 	AWAITINGPICKUP OrderStatus = "AWAITING_PICKUP"
@@ -31,6 +37,21 @@ const (
 	PENDING        OrderStatus = "PENDING"
 	RETURNED       OrderStatus = "RETURNED"
 )
+
+// N400 Bad Request
+type N400 = interface{}
+
+// N401 Unauthorized
+type N401 = interface{}
+
+// N403 Forbidden
+type N403 = interface{}
+
+// N404 Not Found
+type N404 = interface{}
+
+// N500 Internal Server Error
+type N500 = interface{}
 
 // Customer defines model for Customer.
 type Customer struct {
@@ -54,6 +75,24 @@ type CustomerDetails struct {
 
 // CustomerIdType CustomerID
 type CustomerIdType = uuid.UUID
+
+// Error General API Error Response
+type Error struct {
+	Code      int        `json:"code"`
+	Domain    *string    `json:"domain,omitempty"`
+	Message   string     `json:"message"`
+	Reason    *string    `json:"reason,omitempty"`
+	Timestamp *time.Time `json:"timestamp,omitempty"`
+}
+
+// Liveness defines model for Liveness.
+type Liveness struct {
+	Message *string         `json:"message,omitempty" validate:"required"`
+	Status  *LivenessStatus `json:"status,omitempty" validate:"required,oneof=UP DOWN"`
+}
+
+// LivenessStatus defines model for Liveness.Status.
+type LivenessStatus string
 
 // NewCustomerRequest defines model for NewCustomerRequest.
 type NewCustomerRequest struct {
@@ -148,6 +187,18 @@ type Limit = int
 // Page defines model for page.
 type Page = int
 
+// GetLivenessParams defines parameters for GetLiveness.
+type GetLivenessParams struct {
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// GetReadinessParams defines parameters for GetReadiness.
+type GetReadinessParams struct {
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
 // PostCustomersJSONRequestBody defines body for PostCustomers for application/json ContentType.
 type PostCustomersJSONRequestBody = NewCustomerRequest
 
@@ -183,6 +234,9 @@ type ServerInterface interface {
 	// Update an existing customer
 	// (PUT /customers/{customerId})
 	PutCustomersCustomerId(c *gin.Context, customerId int64)
+	// Get liveness status
+	// (GET /liveness)
+	GetLiveness(c *gin.Context, params GetLivenessParams)
 	// Get all orders
 	// (GET /orders)
 	GetOrders(c *gin.Context)
@@ -213,6 +267,9 @@ type ServerInterface interface {
 	// Update an existing product
 	// (PUT /products/{productId})
 	PutProductsProductId(c *gin.Context, productId int64)
+	// Get readiness status
+	// (GET /readiness)
+	GetReadiness(c *gin.Context, params GetReadinessParams)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -320,6 +377,48 @@ func (siw *ServerInterfaceWrapper) PutCustomersCustomerId(c *gin.Context) {
 	}
 
 	siw.Handler.PutCustomersCustomerId(c, customerId)
+}
+
+// GetLiveness operation middleware
+func (siw *ServerInterfaceWrapper) GetLiveness(c *gin.Context) {
+
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetLivenessParams
+
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetLiveness(c, params)
 }
 
 // GetOrders operation middleware
@@ -518,6 +617,48 @@ func (siw *ServerInterfaceWrapper) PutProductsProductId(c *gin.Context) {
 	siw.Handler.PutProductsProductId(c, productId)
 }
 
+// GetReadiness operation middleware
+func (siw *ServerInterfaceWrapper) GetReadiness(c *gin.Context) {
+
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetReadinessParams
+
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetReadiness(c, params)
+}
+
 // GinServerOptions provides options for the Gin server.
 type GinServerOptions struct {
 	BaseURL      string
@@ -550,6 +691,7 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.DELETE(options.BaseURL+"/customers/:customerId", wrapper.DeleteCustomersCustomerId)
 	router.GET(options.BaseURL+"/customers/:customerId", wrapper.GetCustomersCustomerId)
 	router.PUT(options.BaseURL+"/customers/:customerId", wrapper.PutCustomersCustomerId)
+	router.GET(options.BaseURL+"/liveness", wrapper.GetLiveness)
 	router.GET(options.BaseURL+"/orders", wrapper.GetOrders)
 	router.POST(options.BaseURL+"/orders", wrapper.PostOrders)
 	router.DELETE(options.BaseURL+"/orders/:orderId", wrapper.DeleteOrdersOrderId)
@@ -560,42 +702,47 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.DELETE(options.BaseURL+"/products/:productId", wrapper.DeleteProductsProductId)
 	router.GET(options.BaseURL+"/products/:productId", wrapper.GetProductsProductId)
 	router.PUT(options.BaseURL+"/products/:productId", wrapper.PutProductsProductId)
+	router.GET(options.BaseURL+"/readiness", wrapper.GetReadiness)
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
-	"/zOf6EgpLQAA",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
