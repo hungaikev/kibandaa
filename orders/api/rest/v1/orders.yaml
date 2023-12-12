@@ -21,6 +21,60 @@ tags:
     description: Operations related to products
 
 paths:
+  /liveness:
+    get:
+      tags:
+        - Liveness
+      summary: Get liveness status
+      operationId: getLiveness
+      parameters:
+        - $ref: '#/components/parameters/X-RequestID'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Liveness'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
+  /readiness:
+    get:
+      tags:
+        - Readiness
+      summary: Get readiness status
+      operationId: getReadiness
+      parameters:
+        - $ref: '#/components/parameters/X-RequestID'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Liveness'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
   /orders:
     get:
       tags:
@@ -491,7 +545,6 @@ components:
         - name
         - email
         - phone
-
     NewCustomerRequest:
       type: object
       properties:
@@ -508,7 +561,6 @@ components:
         - name
         - email
         - phone
-
     Product:
       type: object
       properties:
@@ -553,7 +605,6 @@ components:
         - id
         - name
         - unit_price
-
     NewProduct:
       type: object
       properties:
@@ -564,3 +615,64 @@ components:
       required:
         - name
         - price
+    Liveness:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [ UP, DOWN ]
+          x-oapi-codegen-extra-tags:
+            validate: required,oneof=UP DOWN
+        message:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required
+    Error:
+      title: Error
+      description: General API Error Response
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+        reason:
+          type: string
+        domain:
+          type: string
+        code:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
