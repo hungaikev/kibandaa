@@ -1,0 +1,566 @@
+openapi: 3.1.0
+info:
+  title: Orders Service API
+  description: CRUD operations for orders, customers, and products
+  version: 1.0.0
+
+  contact:
+    name: Hungai Amuhinda
+    email: hungaikevin@gmail.com
+
+servers:
+  - url: http://localhost:8080
+    description: Development server
+
+tags:
+  - name: Orders
+    description: Operations related to orders
+  - name: Customers
+    description: Operations related to customers
+  - name: Products
+    description: Operations related to products
+
+paths:
+  /orders:
+    get:
+      tags:
+        - Orders
+      summary: Get all orders
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+    post:
+      tags:
+        - Orders
+      summary: Create a new order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewOrderRequest'
+      responses:
+        '201':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+  /orders/{orderId}:
+    parameters:
+      - name: orderId
+        in: path
+        required: true
+        description: ID of the order
+        schema:
+          type: integer
+          format: int64
+    get:
+      tags:
+        - Orders
+      summary: Get a specific order by ID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+    put:
+      tags:
+        - Orders
+      summary: Update an existing order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '200':
+          description: Order updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+    delete:
+      tags:
+        - Orders
+      summary: Delete an order
+      responses:
+        '204':
+          description: Order deleted successfully
+
+  /customers:
+    get:
+      tags:
+        - Customers
+      summary: Get all customers
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+    post:
+      tags:
+        - Customers
+      summary: Create a new customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewCustomerRequest'
+      responses:
+        '201':
+          description: Customer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+  /customers/{customerId}:
+    parameters:
+      - name: customerId
+        in: path
+        required: true
+        description: ID of the customer
+        schema:
+          type: integer
+          format: int64
+    get:
+      tags:
+        - Customers
+      summary: Get a specific customer by ID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+    put:
+      tags:
+        - Customers
+      summary: Update an existing customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '200':
+          description: Customer updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+    delete:
+      tags:
+        - Customers
+      summary: Delete a customer
+      responses:
+        '204':
+          description: Customer deleted successfully
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+    post:
+      tags:
+        - Products
+      summary: Create a new product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewProduct'
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+  /products/{productId}:
+    parameters:
+      - name: productId
+        in: path
+        required: true
+        description: ID of the product
+        schema:
+          type: integer
+          format: int64
+    get:
+      tags:
+        - Products
+      summary: Get a specific product by ID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+    put:
+      tags:
+        - Products
+      summary: Update an existing product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+    delete:
+      tags:
+        - Products
+      summary: Delete a product
+      responses:
+        '204':
+          description: Product deleted successfully
+
+components:
+  parameters:
+    page:
+      required: false
+      schema:
+        title: Page
+        type: integer
+        default: 0
+      name: page
+      in: query
+      x-oapi-codegen-extra-tags:
+        schema: page
+        validate: omitempty,gte=0
+    limit:
+      required: false
+      schema:
+        title: Limit
+        type: integer
+        default: 20
+      name: limit
+      in: query
+      x-oapi-codegen-extra-tags:
+        schema: limit
+        validate: omitempty,gte=0
+    CustomerID:
+      name: customerID
+      in: path
+      required: true
+      description: ID of the customer
+      schema:
+        $ref: '#/components/schemas/CustomerID'
+    OrderID:
+      name: orderID
+      in: path
+      required: true
+      description: ID of the order
+      schema:
+        $ref: '#/components/schemas/OrderID'
+    ProductID:
+      name: productID
+      in: path
+      required: true
+      description: ID of the product
+      schema:
+        $ref: '#/components/schemas/ProductID'
+    X-RequestID:
+      name: xRequestID
+      in: header
+      required: true
+      description: X-Request-ID
+      schema:
+        $ref: '#/components/schemas/X-RequestID'
+  schemas:
+    CustomerID:
+      x-go-type: uuid.UUID
+      description: CustomerID
+      x-go-name: CustomerIdType
+      x-go-type-import:
+        name: uuid
+        path: github.com/google/uuid
+      x-oapi-codegen-extra-tags:
+        validate: required,customerID
+    OrderID:
+      x-go-type: uuid.UUID
+      description: OrderID
+      x-go-name: OrderIdType
+      x-go-type-import:
+        name: uuid
+        path: github.com/google/uuid
+      x-oapi-codegen-extra-tags:
+        validate: required,orderID
+    ProductID:
+      x-go-type: uuid.UUID
+      description: ProductID
+      x-go-name: ProductIdType
+      x-go-type-import:
+        name: uuid
+        path: github.com/google/uuid
+      x-oapi-codegen-extra-tags:
+        validate: required,productID
+    X-RequestID:
+      x-go-type: uuid.UUID
+      description: X-RequestID
+      x-go-name: XRequestIdType
+      x-go-type-import:
+        name: uuid
+        path: github.com/google/uuid
+      x-oapi-codegen-extra-tags:
+        validate: required,x-requestID
+    Order:
+      type: object
+      properties:
+        id:
+          title: Order ID
+          x-go-type: uuid.UUID
+          x-go-type-import:
+            name: uuid
+            path: github.com/google/uuid
+          x-oapi-codegen-extra-tags:
+            validate: required,id
+        customer:
+          $ref: '#/components/schemas/Customer'
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        status:
+          title: Order Status
+          description: Order Status details
+          type: string
+          enum: [ PENDING, AWAITING_PICKUP, IN_TRANSIT, DELIVERED, CANCELLED, RETURNED, DISPUTED ]
+          x-oapi-codegen-extra-tags:
+            validate: required,oneof=PENDING AWAITING_PICKUP IN_TRANSIT DELIVERED CANCELLED RETURNED DISPUTED
+        total:
+          title: Order Total
+          description: Order Total details
+          type: number
+          format: double
+        taxes:
+          title: Order Taxes
+          description: Order Taxes details
+          type: number
+          format: double
+        created_at:
+          title: Created At
+          description: Created At details
+          type: string
+          format: date-time
+          example: "2021-01-30T08:30:00Z"
+          x-oapi-codegen-extra-tags:
+            validate: rfc3339_date-time
+        updated_at:
+          title: Updated At
+          description: Updated At details
+          type: string
+          format: date-time
+          example: "2021-01-30T08:30:00Z"
+          x-oapi-codegen-extra-tags:
+            validate: rfc3339_date-time
+      required:
+        - id
+        - customer
+        - products
+        - status
+    ProductInOrder:
+      type: object
+      properties:
+        product_id:
+          type: integer
+          format: int64
+        quantity:
+          type: integer
+      required:
+        - product_id
+        - quantity
+    CustomerDetails:
+      type: object
+      properties:
+        name:
+          title: Customer Name
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required
+        phone:
+          title: Customer Phone
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required,e164
+        email:
+          title: Customer Email
+          type: string
+          format: email
+          x-oapi-codegen-extra-tags:
+            validate: required,email
+      required:
+        - name
+        - email
+        - phone
+    NewOrderRequest:
+      title: New Order Request
+      description: New Order Request details
+      type: object
+      properties:
+        customer:
+          title: Customer Details
+          $ref: '#/components/schemas/CustomerDetails'
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductInOrder'
+      required:
+        - customer
+        - products
+    Customer:
+      type: object
+      properties:
+        id:
+          title: Customer ID
+          x-go-type: uuid.UUID
+          x-go-type-import:
+            name: uuid
+            path: github.com/google/uuid
+          x-oapi-codegen-extra-tags:
+            validate: required,id
+        name:
+          type: string
+          title: Customer Name
+          x-oapi-codegen-extra-tags:
+              validate: required
+        email:
+          type: string
+          format: email
+          title: Customer Email
+          x-oapi-codegen-extra-tags:
+              validate: required,email
+        phone:
+          type: string
+          title: Customer Phone
+          x-oapi-codegen-extra-tags:
+              validate: required,e164
+        created_at:
+          title: Created At
+          description: Created At details
+          type: string
+          format: date-time
+          example: "2021-01-30T08:30:00Z"
+          x-oapi-codegen-extra-tags:
+            validate: rfc3339_date-time
+        updated_at:
+          title: Updated At
+          description: Updated At details
+          type: string
+          format: date-time
+          example: "2021-01-30T08:30:00Z"
+          x-oapi-codegen-extra-tags:
+            validate: rfc3339_date-time
+      required:
+        - id
+        - name
+        - email
+        - phone
+
+    NewCustomerRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: e164
+      required:
+        - name
+        - email
+        - phone
+
+    Product:
+      type: object
+      properties:
+        id:
+          title: Product ID
+          x-go-type: uuid.UUID
+          x-go-type-import:
+            name: uuid
+            path: github.com/google/uuid
+          x-oapi-codegen-extra-tags:
+            validate: required,id
+        name:
+          type: string
+          title: Product Name
+          description: Product Name details
+          x-oapi-codegen-extra-tags:
+              validate: required
+        description:
+          type: string
+          title: Product Description
+          description: Product Description details
+        unit_price:
+          type: number
+          format: double
+        created_at:
+          title: Created At
+          description: Created At details
+          type: string
+          format: date-time
+          example: "2021-01-30T08:30:00Z"
+          x-oapi-codegen-extra-tags:
+            validate: rfc3339_date-time
+        updated_at:
+          title: Updated At
+          description: Updated At details
+          type: string
+          format: date-time
+          example: "2021-01-30T08:30:00Z"
+          x-oapi-codegen-extra-tags:
+            validate: rfc3339_date-time
+      required:
+        - id
+        - name
+        - unit_price
+
+    NewProduct:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+      required:
+        - name
+        - price

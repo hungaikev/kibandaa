@@ -1,0 +1,22 @@
+# https://github.com/golangci/golangci-lint#config-file
+run:
+  concurrency: 8
+  timeout: 60s
+  tests: false
+linters: # Descriptions: https://github.com/golangci/awesome-go-linters
+  # To see those enabled by default `golangci-lint help linters`
+  enable: # These are disabled by default by golangci-lint
+    - dogsled
+    - gochecknoinits
+    - goconst
+    - goimports
+    #- revive
+    - gosec
+    - rowserrcheck
+    - stylecheck
+    - unparam
+linters-settings:
+  goimports:
+    local-prefixes: github.com/monkish-labs
+issues:
+  exclude-use-default: false
