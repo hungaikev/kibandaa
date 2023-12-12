@@ -1,0 +1,85 @@
+openapi: 3.0.0
+info:
+  title: Payment Service API
+  description: Handles payments through M-Pesa and provides callback endpoints
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8081
+    description: Development server
+
+tags:
+  - name: Payments
+    description: Operations related to payments
+
+paths:
+  /payments/initiate:
+    post:
+      tags:
+        - Payments
+      summary: Initiate a payment through M-Pesa
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: Payment initiated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+
+  /payments/callback:
+    post:
+      tags:
+        - Payments
+      summary: Callback endpoint for M-Pesa payment updates
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentCallback'
+      responses:
+        '200':
+          description: Callback received successfully
+
+components:
+  schemas:
+    PaymentRequest:
+      type: object
+      properties:
+        orderId:
+          type: integer
+          format: int64
+        amount:
+          type: number
+          format: float
+      required:
+        - orderId
+        - amount
+
+    PaymentResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        status:
+          type: string
+      required:
+        - transactionId
+        - status
+
+    PaymentCallback:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        status:
+          type: string
+      required:
+        - transactionId
+        - status
