@@ -6,8 +6,8 @@ on:
 
 
 env:
-  SERVICE: wismo
-  GOPRIVATE: "github.com/monkish-labs/*"
+  SERVICE: kibandaa
+  GOPRIVATE: "github.com/hungaikev/*"
 
 jobs:
   lint:
