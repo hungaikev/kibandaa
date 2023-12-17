@@ -1,22 +1,21 @@
 package main
 
 import (
-	"cloud.google.com/go/firestore"
 	"context"
 	"expvar"
 	"fmt"
-	"github.com/hungaikev/kibandaa/orders/internal/storage"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
+	"cloud.google.com/go/firestore"
 	"github.com/ardanlabs/conf/v3"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 
 	"github.com/hungaikev/kibandaa/orders/internal/api/handlers"
-	v1 "github.com/hungaikev/kibandaa/orders/internal/api/rest/v1"
+	api "github.com/hungaikev/kibandaa/orders/internal/api/rest/v1"
 )
 
 const (
@@ -101,12 +100,12 @@ func run(log *zerolog.Logger) error {
 		return errors.Wrap(err, "could not create firestore client")
 	}
 	// Create a new storage type and connection.
-	store, err := storage.NewRepository(log, firestoreClient)
+	store, err := api.NewRepository(log, firestoreClient)
 	if err != nil {
 		return errors.Wrap(err, "could not create storage")
 	}
 
-	ordersServer := v1.NewOrdersServer(log, build, store)
+	ordersServer := api.NewOrdersServer(log, build, store)
 
 	api := handlers.API(ordersServer, cfg.Web.APIHost)
 

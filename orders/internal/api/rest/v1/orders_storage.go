@@ -1,4 +1,4 @@
-package storage
+package v1
 
 import (
 	"context"
@@ -7,27 +7,25 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/rs/zerolog"
 	"google.golang.org/api/iterator"
-
-	api "github.com/hungaikev/kibandaa/orders/internal/api/rest/v1"
 )
 
 // Store provides all functions to execute database queries and transactions.
 type Store interface {
-	GetCustomers(ctx context.Context) ([]api.Customer, error)
-	PostCustomer(ctx context.Context, customer api.Customer) (api.Customer, error)
-	GetCustomerByID(ctx context.Context, id string) (api.Customer, error)
+	GetCustomers(ctx context.Context) ([]Customer, error)
+	PostCustomer(ctx context.Context, customer Customer) (Customer, error)
+	GetCustomerByID(ctx context.Context, id string) (Customer, error)
 	DeleteCustomerByID(ctx context.Context, id string) error
-	UpdateCustomerByID(ctx context.Context, customer api.Customer) (api.Customer, error)
-	GetOrders(ctx context.Context) ([]api.Order, error)
-	PostOrder(ctx context.Context, order api.Order) (api.Order, error)
-	GetOrderByID(ctx context.Context, id string) (api.Order, error)
+	UpdateCustomerByID(ctx context.Context, customer Customer) (Customer, error)
+	GetOrders(ctx context.Context) ([]Order, error)
+	PostOrder(ctx context.Context, order Order) (Order, error)
+	GetOrderByID(ctx context.Context, id string) (Order, error)
 	DeleteOrderByID(ctx context.Context, id string) error
-	UpdateOrderByID(ctx context.Context, order api.Order) (api.Order, error)
-	GetProducts(ctx context.Context) ([]api.Product, error)
-	PostProduct(ctx context.Context, product api.Product) (api.Product, error)
-	GetProductByID(ctx context.Context, id string) (api.Product, error)
+	UpdateOrderByID(ctx context.Context, order Order) (Order, error)
+	GetProducts(ctx context.Context) ([]Product, error)
+	PostProduct(ctx context.Context, product Product) (Product, error)
+	GetProductByID(ctx context.Context, id string) (Product, error)
 	DeleteProductByID(ctx context.Context, id string) error
-	UpdateProductByID(ctx context.Context, product api.Product) (api.Product, error)
+	UpdateProductByID(ctx context.Context, product Product) (Product, error)
 }
 
 // Repository provides all functions to execute database queries and transactions.
@@ -45,8 +43,8 @@ func NewRepository(log *zerolog.Logger, firestoreClient *firestore.Client) (*Rep
 }
 
 // GetCustomers returns all customers
-func (r *Repository) GetCustomers(ctx context.Context) ([]api.Customer, error) {
-	var customers []api.Customer
+func (r *Repository) GetCustomers(ctx context.Context) ([]Customer, error) {
+	var customers []Customer
 
 	iter := r.client.Collection("customers").Documents(ctx)
 	defer iter.Stop()
@@ -60,7 +58,7 @@ func (r *Repository) GetCustomers(ctx context.Context) ([]api.Customer, error) {
 			return nil, err
 		}
 
-		var customer api.Customer
+		var customer Customer
 		if err := doc.DataTo(&customer); err != nil {
 			return nil, err
 		}
@@ -73,23 +71,23 @@ func (r *Repository) GetCustomers(ctx context.Context) ([]api.Customer, error) {
 }
 
 // PostCustomer creates a customer
-func (r *Repository) PostCustomer(ctx context.Context, customer api.Customer) (api.Customer, error) {
+func (r *Repository) PostCustomer(ctx context.Context, customer Customer) (Customer, error) {
 	_, err := r.client.Collection("customers").Doc(customer.Id.String()).Set(ctx, customer)
 	if err != nil {
-		return api.Customer{}, err
+		return Customer{}, err
 	}
 
 	customer, err = r.GetCustomerByID(ctx, customer.Id.String())
 	if err != nil {
-		return api.Customer{}, err
+		return Customer{}, err
 	}
 
 	return customer, err
 }
 
 // GetCustomerByID returns a single customer
-func (r *Repository) GetCustomerByID(ctx context.Context, id string) (api.Customer, error) {
-	var customer api.Customer
+func (r *Repository) GetCustomerByID(ctx context.Context, id string) (Customer, error) {
+	var customer Customer
 	doc, err := r.client.Collection("customers").Doc(id).Get(ctx)
 	if err != nil {
 		return customer, err
@@ -109,23 +107,23 @@ func (r *Repository) DeleteCustomerByID(ctx context.Context, id string) error {
 }
 
 // UpdateCustomerByID updates a single customer
-func (r *Repository) UpdateCustomerByID(ctx context.Context, customer api.Customer) (api.Customer, error) {
+func (r *Repository) UpdateCustomerByID(ctx context.Context, customer Customer) (Customer, error) {
 	_, err := r.client.Collection("customers").Doc(customer.Id.String()).Set(ctx, customer)
 	if err != nil {
-		return api.Customer{}, err
+		return Customer{}, err
 	}
 
 	customer, err = r.GetCustomerByID(ctx, customer.Id.String())
 	if err != nil {
-		return api.Customer{}, err
+		return Customer{}, err
 	}
 
 	return customer, err
 }
 
 // GetOrders returns all orders
-func (r *Repository) GetOrders(ctx context.Context) ([]api.Order, error) {
-	var orders []api.Order
+func (r *Repository) GetOrders(ctx context.Context) ([]Order, error) {
+	var orders []Order
 
 	iter := r.client.Collection("orders").Documents(ctx)
 	defer iter.Stop()
@@ -139,7 +137,7 @@ func (r *Repository) GetOrders(ctx context.Context) ([]api.Order, error) {
 			return nil, err
 		}
 
-		var order api.Order
+		var order Order
 		if err := doc.DataTo(&order); err != nil {
 			return nil, err
 		}
@@ -151,23 +149,23 @@ func (r *Repository) GetOrders(ctx context.Context) ([]api.Order, error) {
 }
 
 // PostOrder creates an order
-func (r *Repository) PostOrder(ctx context.Context, order api.Order) (api.Order, error) {
+func (r *Repository) PostOrder(ctx context.Context, order Order) (Order, error) {
 	_, err := r.client.Collection("orders").Doc(order.Id.String()).Set(ctx, order)
 	if err != nil {
-		return api.Order{}, err
+		return Order{}, err
 	}
 
 	order, err = r.GetOrderByID(ctx, order.Id.String())
 	if err != nil {
-		return api.Order{}, err
+		return Order{}, err
 	}
 
 	return order, err
 }
 
 // GetOrderByID returns a single order
-func (r *Repository) GetOrderByID(ctx context.Context, id string) (api.Order, error) {
-	var order api.Order
+func (r *Repository) GetOrderByID(ctx context.Context, id string) (Order, error) {
+	var order Order
 	doc, err := r.client.Collection("orders").Doc(id).Get(ctx)
 	if err != nil {
 		return order, err
@@ -188,23 +186,23 @@ func (r *Repository) DeleteOrderByID(ctx context.Context, id string) error {
 }
 
 // UpdateOrderByID updates a single order
-func (r *Repository) UpdateOrderByID(ctx context.Context, order api.Order) (api.Order, error) {
+func (r *Repository) UpdateOrderByID(ctx context.Context, order Order) (Order, error) {
 	_, err := r.client.Collection("orders").Doc(order.Id.String()).Set(ctx, order)
 	if err != nil {
-		return api.Order{}, err
+		return Order{}, err
 	}
 
 	order, err = r.GetOrderByID(ctx, order.Id.String())
 	if err != nil {
-		return api.Order{}, err
+		return Order{}, err
 	}
 
 	return order, err
 }
 
 // GetProducts returns all products
-func (r *Repository) GetProducts(ctx context.Context) ([]api.Product, error) {
-	var products []api.Product
+func (r *Repository) GetProducts(ctx context.Context) ([]Product, error) {
+	var products []Product
 
 	iter := r.client.Collection("products").Documents(ctx)
 	defer iter.Stop()
@@ -218,7 +216,7 @@ func (r *Repository) GetProducts(ctx context.Context) ([]api.Product, error) {
 			return nil, err
 		}
 
-		var product api.Product
+		var product Product
 		if err := doc.DataTo(&product); err != nil {
 			return nil, err
 		}
@@ -230,23 +228,23 @@ func (r *Repository) GetProducts(ctx context.Context) ([]api.Product, error) {
 }
 
 // PostProduct creates a product
-func (r *Repository) PostProduct(ctx context.Context, product api.Product) (api.Product, error) {
+func (r *Repository) PostProduct(ctx context.Context, product Product) (Product, error) {
 	_, err := r.client.Collection("products").Doc(product.Id.String()).Set(ctx, product)
 	if err != nil {
-		return api.Product{}, err
+		return Product{}, err
 	}
 
 	product, err = r.GetProductByID(ctx, product.Id.String())
 	if err != nil {
-		return api.Product{}, err
+		return Product{}, err
 	}
 
 	return product, err
 }
 
 // GetProductByID returns a single product
-func (r *Repository) GetProductByID(ctx context.Context, id string) (api.Product, error) {
-	var product api.Product
+func (r *Repository) GetProductByID(ctx context.Context, id string) (Product, error) {
+	var product Product
 	doc, err := r.client.Collection("products").Doc(id).Get(ctx)
 	if err != nil {
 		return product, err
@@ -267,15 +265,15 @@ func (r *Repository) DeleteProductByID(ctx context.Context, id string) error {
 }
 
 // UpdateProductByID updates a single product
-func (r *Repository) UpdateProductByID(ctx context.Context, product api.Product) (api.Product, error) {
+func (r *Repository) UpdateProductByID(ctx context.Context, product Product) (Product, error) {
 	_, err := r.client.Collection("products").Doc(product.Id.String()).Set(ctx, product)
 	if err != nil {
-		return api.Product{}, err
+		return Product{}, err
 	}
 
 	product, err = r.GetProductByID(ctx, product.Id.String())
 	if err != nil {
-		return api.Product{}, err
+		return Product{}, err
 	}
 
 	return product, err

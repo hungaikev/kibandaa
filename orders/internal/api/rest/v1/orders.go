@@ -6,14 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
-
-	"github.com/hungaikev/kibandaa/orders/internal/storage"
 )
 
 type OrdersServer struct {
 	Log     *zerolog.Logger
 	build   string
-	storage *storage.Repository
+	storage *Repository
 }
 
 // GetCustomers returns a list of customers
@@ -451,7 +449,7 @@ func (o *OrdersServer) GetReadiness(c *gin.Context, params GetReadinessParams) {
 }
 
 // NewOrdersServer constructs a new OrdersServer.
-func NewOrdersServer(log *zerolog.Logger, build string, storage *storage.Repository) *OrdersServer {
+func NewOrdersServer(log *zerolog.Logger, build string, storage *Repository) *OrdersServer {
 	return &OrdersServer{
 		Log:     log,
 		build:   build,
