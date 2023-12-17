@@ -80,6 +80,11 @@ paths:
       tags:
         - Orders
       summary: Get all orders
+      operationId: GetOrders
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/limit"
+        - $ref: "#/components/parameters/X-RequestID"
       responses:
         '200':
           description: Successful operation
@@ -89,10 +94,25 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Order'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
     post:
       tags:
         - Orders
       summary: Create a new order
+      operationId: CreateOrder
+      parameters:
+        - $ref: '#/components/parameters/X-RequestID'
       requestBody:
         required: true
         content:
@@ -106,20 +126,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
 
-  /orders/{orderId}:
-    parameters:
-      - name: orderId
-        in: path
-        required: true
-        description: ID of the order
-        schema:
-          type: integer
-          format: int64
+  /orders/{orderID}:
     get:
       tags:
         - Orders
       summary: Get a specific order by ID
+      operationId: GetOrderByID
+      parameters:
+        - $ref: '#/components/parameters/OrderID'
+        - $ref: '#/components/parameters/X-RequestID'
       responses:
         '200':
           description: Successful operation
@@ -127,10 +155,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
     put:
       tags:
         - Orders
       summary: Update an existing order
+      operationId: UpdateOrderByID
+      parameters:
+        - $ref: '#/components/parameters/OrderID'
+        - $ref: '#/components/parameters/X-RequestID'
       requestBody:
         required: true
         content:
@@ -148,6 +192,10 @@ paths:
       tags:
         - Orders
       summary: Delete an order
+      operationId: DeleteOrderByID
+      parameters:
+        - $ref: '#/components/parameters/OrderID'
+        - $ref: '#/components/parameters/X-RequestID'
       responses:
         '204':
           description: Order deleted successfully
@@ -157,6 +205,11 @@ paths:
       tags:
         - Customers
       summary: Get all customers
+      operationId: GetCustomers
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/limit"
+        - $ref: "#/components/parameters/X-RequestID"
       responses:
         '200':
           description: Successful operation
@@ -170,6 +223,9 @@ paths:
       tags:
         - Customers
       summary: Create a new customer
+      operationId: CreateCustomer
+      parameters:
+        - $ref: '#/components/parameters/X-RequestID'
       requestBody:
         required: true
         content:
@@ -183,19 +239,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Customer'
-  /customers/{customerId}:
-    parameters:
-      - name: customerId
-        in: path
-        required: true
-        description: ID of the customer
-        schema:
-          type: integer
-          format: int64
+  /customers/{customerID}:
     get:
       tags:
         - Customers
       summary: Get a specific customer by ID
+      operationId: GetCustomerByID
+      parameters:
+        - $ref: '#/components/parameters/CustomerID'
+        - $ref: '#/components/parameters/X-RequestID'
       responses:
         '200':
           description: Successful operation
@@ -207,6 +259,10 @@ paths:
       tags:
         - Customers
       summary: Update an existing customer
+      operationId: UpdateCustomerByID
+      parameters:
+        - $ref: '#/components/parameters/CustomerID'
+        - $ref: '#/components/parameters/X-RequestID'
       requestBody:
         required: true
         content:
@@ -224,6 +280,10 @@ paths:
       tags:
         - Customers
       summary: Delete a customer
+      operationId: DeleteCustomerByID
+      parameters:
+        - $ref: '#/components/parameters/CustomerID'
+        - $ref: '#/components/parameters/X-RequestID'
       responses:
         '204':
           description: Customer deleted successfully
@@ -232,6 +292,11 @@ paths:
       tags:
         - Products
       summary: Get all products
+      operationId: GetProducts
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/limit"
+        - $ref: "#/components/parameters/X-RequestID"
       responses:
         '200':
           description: Successful operation
@@ -245,6 +310,9 @@ paths:
       tags:
         - Products
       summary: Create a new product
+      operationId: CreateProduct
+      parameters:
+        - $ref: '#/components/parameters/X-RequestID'
       requestBody:
         required: true
         content:
@@ -259,19 +327,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Product'
 
-  /products/{productId}:
-    parameters:
-      - name: productId
-        in: path
-        required: true
-        description: ID of the product
-        schema:
-          type: integer
-          format: int64
+  /products/{productID}:
     get:
       tags:
         - Products
       summary: Get a specific product by ID
+      operationId: GetProductByID
+      parameters:
+        - $ref: '#/components/parameters/ProductID'
+        - $ref: '#/components/parameters/X-RequestID'
       responses:
         '200':
           description: Successful operation
@@ -283,6 +347,10 @@ paths:
       tags:
         - Products
       summary: Update an existing product
+      operationId: UpdateProductByID
+      parameters:
+        - $ref: '#/components/parameters/ProductID'
+        - $ref: '#/components/parameters/X-RequestID'
       requestBody:
         required: true
         content:
@@ -300,6 +368,10 @@ paths:
       tags:
         - Products
       summary: Delete a product
+      operationId: DeleteProductByID
+      parameters:
+        - $ref: '#/components/parameters/ProductID'
+        - $ref: '#/components/parameters/X-RequestID'
       responses:
         '204':
           description: Product deleted successfully
@@ -448,17 +520,6 @@ components:
         - customer
         - products
         - status
-    ProductInOrder:
-      type: object
-      properties:
-        product_id:
-          type: integer
-          format: int64
-        quantity:
-          type: integer
-      required:
-        - product_id
-        - quantity
     CustomerDetails:
       type: object
       properties:
@@ -493,7 +554,17 @@ components:
         products:
           type: array
           items:
-            $ref: '#/components/schemas/ProductInOrder'
+            $ref: '#/components/schemas/NewProduct'
+        taxes:
+          title: Order Taxes
+          description: Order Taxes details
+          type: number
+          format: double
+        total:
+          title: Order Total
+          description: Order Total details
+          type: number
+          format: double
       required:
         - customer
         - products
@@ -610,11 +681,14 @@ components:
       properties:
         name:
           type: string
-        price:
+        unit_price:
           type: number
+          format: double
+        description:
+          type: string
       required:
         - name
-        - price
+        - unit_price
     Liveness:
       type: object
       properties:

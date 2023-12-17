@@ -1,104 +1,460 @@
 package v1
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/rs/zerolog"
+
+	"github.com/hungaikev/kibandaa/orders/internal/storage"
 )
 
 type OrdersServer struct {
-	Log   *zerolog.Logger
-	build string
+	Log     *zerolog.Logger
+	build   string
+	storage *storage.Repository
 }
 
-func (o OrdersServer) GetCustomers(c *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+// GetCustomers returns a list of customers
+func (o *OrdersServer) GetCustomers(c *gin.Context, params GetCustomersParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	customers, err := o.storage.GetCustomers(ctx)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, customers)
 }
 
-func (o OrdersServer) PostCustomers(c *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+// CreateCustomer creates a new customer
+func (o *OrdersServer) CreateCustomer(c *gin.Context, params CreateCustomerParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	var customerRequest NewCustomerRequest
+	if err := c.BindJSON(&customerRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	cus := Customer{
+		Id:    uuid.New(),
+		Name:  customerRequest.Name,
+		Email: customerRequest.Email,
+		Phone: customerRequest.Phone,
+	}
+
+	customer, err := o.storage.PostCustomer(ctx, cus)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, customer)
+
 }
 
-func (o OrdersServer) DeleteCustomersCustomerId(c *gin.Context, customerId int64) {
-	//TODO implement me
-	panic("implement me")
+// DeleteCustomerByID deletes a customer by ID
+func (o *OrdersServer) DeleteCustomerByID(c *gin.Context, customerID CustomerID, params DeleteCustomerByIDParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	custID, err := uuid.Parse(customerID.String())
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	err = o.storage.DeleteCustomerByID(ctx, custID.String())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Customer deleted successfully",
+	})
 }
 
-func (o OrdersServer) GetCustomersCustomerId(c *gin.Context, customerId int64) {
-	//TODO implement me
-	panic("implement me")
+// GetCustomerByID returns a customer by ID
+func (o *OrdersServer) GetCustomerByID(c *gin.Context, customerID CustomerID, params GetCustomerByIDParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	custID, err := uuid.Parse(customerID.String())
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	customer, err := o.storage.GetCustomerByID(ctx, custID.String())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, customer)
 }
 
-func (o OrdersServer) PutCustomersCustomerId(c *gin.Context, customerId int64) {
-	//TODO implement me
-	panic("implement me")
+// UpdateCustomerByID updates a customer by ID
+func (o *OrdersServer) UpdateCustomerByID(c *gin.Context, customerID CustomerID, params UpdateCustomerByIDParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	custID, err := uuid.Parse(customerID.String())
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	var customerUpdateRequest Customer
+	if err := c.BindJSON(&customerUpdateRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	cus := Customer{
+		Id:    custID,
+		Name:  customerUpdateRequest.Name,
+		Email: customerUpdateRequest.Email,
+		Phone: customerUpdateRequest.Phone,
+	}
+
+	customer, err := o.storage.UpdateCustomerByID(ctx, cus)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, customer)
 }
 
-func (o OrdersServer) GetLiveness(c *gin.Context, params GetLivenessParams) {
-	//TODO implement me
-	panic("implement me")
+// GetLiveness returns a 200 OK response
+func (o *OrdersServer) GetLiveness(c *gin.Context, params GetLivenessParams) {
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "OK",
+	})
+
 }
 
-func (o OrdersServer) GetOrders(c *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+// GetOrders returns a list of orders
+func (o *OrdersServer) GetOrders(c *gin.Context, params GetOrdersParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	orders, err := o.storage.GetOrders(ctx)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, orders)
+
 }
 
-func (o OrdersServer) PostOrders(c *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+// CreateOrder creates a new order
+func (o *OrdersServer) CreateOrder(c *gin.Context, params CreateOrderParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	var orderRequest NewOrderRequest
+	if err := c.BindJSON(&orderRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	products := make([]Product, len(orderRequest.Products))
+	for i, p := range orderRequest.Products {
+		products[i] = Product{
+			Name:        p.Name,
+			UnitPrice:   p.UnitPrice,
+			Description: p.Description,
+		}
+	}
+
+	order := Order{
+		Customer: Customer{
+			Email: orderRequest.Customer.Email,
+			Name:  orderRequest.Customer.Name,
+			Phone: orderRequest.Customer.Phone,
+		},
+		Id:       uuid.New(),
+		Products: products,
+		Status:   "PENDING",
+		Taxes:    orderRequest.Taxes,
+		Total:    orderRequest.Total,
+	}
+
+	ord, err := o.storage.PostOrder(ctx, order)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, ord)
 }
 
-func (o OrdersServer) DeleteOrdersOrderId(c *gin.Context, orderId int64) {
-	//TODO implement me
-	panic("implement me")
+// DeleteOrderByID deletes an order by ID
+func (o *OrdersServer) DeleteOrderByID(c *gin.Context, orderID OrderID, params DeleteOrderByIDParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	ordID, err := uuid.Parse(orderID.String())
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	err = o.storage.DeleteOrderByID(ctx, ordID.String())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Order deleted successfully",
+	})
 }
 
-func (o OrdersServer) GetOrdersOrderId(c *gin.Context, orderId int64) {
-	//TODO implement me
-	panic("implement me")
+// GetOrderByID returns an order by ID
+func (o *OrdersServer) GetOrderByID(c *gin.Context, orderID OrderID, params GetOrderByIDParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	ordID, err := uuid.Parse(orderID.String())
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	order, err := o.storage.GetOrderByID(ctx, ordID.String())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, order)
 }
 
-func (o OrdersServer) PutOrdersOrderId(c *gin.Context, orderId int64) {
-	//TODO implement me
-	panic("implement me")
+// UpdateOrderByID updates an order by ID
+func (o *OrdersServer) UpdateOrderByID(c *gin.Context, orderID OrderID, params UpdateOrderByIDParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	ordID, err := uuid.Parse(orderID.String())
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	var orderUpdateRequest Order
+	if err := c.BindJSON(&orderUpdateRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	orderUpdateRequest.Id = ordID
+
+	order, err := o.storage.UpdateOrderByID(ctx, orderUpdateRequest)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, order)
+
 }
 
-func (o OrdersServer) GetProducts(c *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+// GetProducts returns a list of products
+func (o *OrdersServer) GetProducts(c *gin.Context, params GetProductsParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	products, err := o.storage.GetProducts(ctx)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, products)
 }
 
-func (o OrdersServer) PostProducts(c *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+// CreateProduct creates a new product
+func (o *OrdersServer) CreateProduct(c *gin.Context, params CreateProductParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	var productRequest NewProduct
+	if err := c.BindJSON(&productRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	product := Product{
+		Name:        productRequest.Name,
+		UnitPrice:   productRequest.UnitPrice,
+		Description: productRequest.Description,
+	}
+
+	prod, err := o.storage.PostProduct(ctx, product)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, prod)
 }
 
-func (o OrdersServer) DeleteProductsProductId(c *gin.Context, productId int64) {
-	//TODO implement me
-	panic("implement me")
+// DeleteProductByID deletes a product by ID
+func (o *OrdersServer) DeleteProductByID(c *gin.Context, productID ProductID, params DeleteProductByIDParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	prodID, err := uuid.Parse(productID.String())
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	err = o.storage.DeleteProductByID(ctx, prodID.String())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Product deleted successfully",
+	})
 }
 
-func (o OrdersServer) GetProductsProductId(c *gin.Context, productId int64) {
-	//TODO implement me
-	panic("implement me")
+// GetProductByID returns a product by ID
+func (o *OrdersServer) GetProductByID(c *gin.Context, productID ProductID, params GetProductByIDParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	prodID, err := uuid.Parse(productID.String())
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	product, err := o.storage.GetProductByID(ctx, prodID.String())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, product)
 }
 
-func (o OrdersServer) PutProductsProductId(c *gin.Context, productId int64) {
-	//TODO implement me
-	panic("implement me")
+// UpdateProductByID updates a product by ID
+func (o *OrdersServer) UpdateProductByID(c *gin.Context, productID ProductID, params UpdateProductByIDParams) {
+	ctx := c.Request.Context()
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	prodID, err := uuid.Parse(productID.String())
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	var productUpdateRequest Product
+	if err := c.BindJSON(&productUpdateRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	productUpdateRequest.Id = prodID
+
+	product, err := o.storage.UpdateProductByID(ctx, productUpdateRequest)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, product)
 }
 
-func (o OrdersServer) GetReadiness(c *gin.Context, params GetReadinessParams) {
-	//TODO implement me
-	panic("implement me")
+// GetReadiness returns a 200 OK response
+func (o *OrdersServer) GetReadiness(c *gin.Context, params GetReadinessParams) {
+	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "OK",
+	})
 }
 
 // NewOrdersServer constructs a new OrdersServer.
-func NewOrdersServer(log *zerolog.Logger, build string) *OrdersServer {
+func NewOrdersServer(log *zerolog.Logger, build string, storage *storage.Repository) *OrdersServer {
 	return &OrdersServer{
-		Log:   log,
-		build: build,
+		Log:     log,
+		build:   build,
+		storage: storage,
 	}
 }
