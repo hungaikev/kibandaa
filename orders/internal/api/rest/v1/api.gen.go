@@ -103,14 +103,21 @@ type NewCustomerRequest struct {
 
 // NewOrderRequest New Order Request details
 type NewOrderRequest struct {
-	Customer CustomerDetails  `json:"customer"`
-	Products []ProductInOrder `json:"products"`
+	Customer CustomerDetails `json:"customer"`
+	Products []NewProduct    `json:"products"`
+
+	// Taxes Order Taxes details
+	Taxes *float64 `json:"taxes,omitempty"`
+
+	// Total Order Total details
+	Total *float64 `json:"total,omitempty"`
 }
 
 // NewProduct defines model for NewProduct.
 type NewProduct struct {
-	Name  string  `json:"name"`
-	Price float32 `json:"price"`
+	Description *string `json:"description,omitempty"`
+	Name        string  `json:"name"`
+	UnitPrice   float64 `json:"unit_price"`
 }
 
 // Order defines model for Order.
@@ -160,12 +167,6 @@ type Product struct {
 // ProductIdType ProductID
 type ProductIdType = uuid.UUID
 
-// ProductInOrder defines model for ProductInOrder.
-type ProductInOrder struct {
-	ProductId int64 `json:"product_id"`
-	Quantity  int   `json:"quantity"`
-}
-
 // XRequestIdType X-RequestID
 type XRequestIdType = uuid.UUID
 
@@ -187,8 +188,107 @@ type Limit = int
 // Page defines model for page.
 type Page = int
 
+// GetCustomersParams defines parameters for GetCustomers.
+type GetCustomersParams struct {
+	Page  *Page  `form:"page,omitempty" json:"page,omitempty" schema:"page" validate:"omitempty,gte=0"`
+	Limit *Limit `form:"limit,omitempty" json:"limit,omitempty" schema:"limit" validate:"omitempty,gte=0"`
+
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// CreateCustomerParams defines parameters for CreateCustomer.
+type CreateCustomerParams struct {
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// DeleteCustomerByIDParams defines parameters for DeleteCustomerByID.
+type DeleteCustomerByIDParams struct {
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// GetCustomerByIDParams defines parameters for GetCustomerByID.
+type GetCustomerByIDParams struct {
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// UpdateCustomerByIDParams defines parameters for UpdateCustomerByID.
+type UpdateCustomerByIDParams struct {
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
 // GetLivenessParams defines parameters for GetLiveness.
 type GetLivenessParams struct {
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// GetOrdersParams defines parameters for GetOrders.
+type GetOrdersParams struct {
+	Page  *Page  `form:"page,omitempty" json:"page,omitempty" schema:"page" validate:"omitempty,gte=0"`
+	Limit *Limit `form:"limit,omitempty" json:"limit,omitempty" schema:"limit" validate:"omitempty,gte=0"`
+
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// CreateOrderParams defines parameters for CreateOrder.
+type CreateOrderParams struct {
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// DeleteOrderByIDParams defines parameters for DeleteOrderByID.
+type DeleteOrderByIDParams struct {
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// GetOrderByIDParams defines parameters for GetOrderByID.
+type GetOrderByIDParams struct {
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// UpdateOrderByIDParams defines parameters for UpdateOrderByID.
+type UpdateOrderByIDParams struct {
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// GetProductsParams defines parameters for GetProducts.
+type GetProductsParams struct {
+	Page  *Page  `form:"page,omitempty" json:"page,omitempty" schema:"page" validate:"omitempty,gte=0"`
+	Limit *Limit `form:"limit,omitempty" json:"limit,omitempty" schema:"limit" validate:"omitempty,gte=0"`
+
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// CreateProductParams defines parameters for CreateProduct.
+type CreateProductParams struct {
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// DeleteProductByIDParams defines parameters for DeleteProductByID.
+type DeleteProductByIDParams struct {
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// GetProductByIDParams defines parameters for GetProductByID.
+type GetProductByIDParams struct {
+	// XRequestID X-Request-ID
+	XRequestID XRequestID `json:"xRequestID"`
+}
+
+// UpdateProductByIDParams defines parameters for UpdateProductByID.
+type UpdateProductByIDParams struct {
 	// XRequestID X-Request-ID
 	XRequestID XRequestID `json:"xRequestID"`
 }
@@ -199,74 +299,74 @@ type GetReadinessParams struct {
 	XRequestID XRequestID `json:"xRequestID"`
 }
 
-// PostCustomersJSONRequestBody defines body for PostCustomers for application/json ContentType.
-type PostCustomersJSONRequestBody = NewCustomerRequest
+// CreateCustomerJSONRequestBody defines body for CreateCustomer for application/json ContentType.
+type CreateCustomerJSONRequestBody = NewCustomerRequest
 
-// PutCustomersCustomerIdJSONRequestBody defines body for PutCustomersCustomerId for application/json ContentType.
-type PutCustomersCustomerIdJSONRequestBody = Customer
+// UpdateCustomerByIDJSONRequestBody defines body for UpdateCustomerByID for application/json ContentType.
+type UpdateCustomerByIDJSONRequestBody = Customer
 
-// PostOrdersJSONRequestBody defines body for PostOrders for application/json ContentType.
-type PostOrdersJSONRequestBody = NewOrderRequest
+// CreateOrderJSONRequestBody defines body for CreateOrder for application/json ContentType.
+type CreateOrderJSONRequestBody = NewOrderRequest
 
-// PutOrdersOrderIdJSONRequestBody defines body for PutOrdersOrderId for application/json ContentType.
-type PutOrdersOrderIdJSONRequestBody = Order
+// UpdateOrderByIDJSONRequestBody defines body for UpdateOrderByID for application/json ContentType.
+type UpdateOrderByIDJSONRequestBody = Order
 
-// PostProductsJSONRequestBody defines body for PostProducts for application/json ContentType.
-type PostProductsJSONRequestBody = NewProduct
+// CreateProductJSONRequestBody defines body for CreateProduct for application/json ContentType.
+type CreateProductJSONRequestBody = NewProduct
 
-// PutProductsProductIdJSONRequestBody defines body for PutProductsProductId for application/json ContentType.
-type PutProductsProductIdJSONRequestBody = Product
+// UpdateProductByIDJSONRequestBody defines body for UpdateProductByID for application/json ContentType.
+type UpdateProductByIDJSONRequestBody = Product
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// Get all customers
 	// (GET /customers)
-	GetCustomers(c *gin.Context)
+	GetCustomers(c *gin.Context, params GetCustomersParams)
 	// Create a new customer
 	// (POST /customers)
-	PostCustomers(c *gin.Context)
+	CreateCustomer(c *gin.Context, params CreateCustomerParams)
 	// Delete a customer
-	// (DELETE /customers/{customerId})
-	DeleteCustomersCustomerId(c *gin.Context, customerId int64)
+	// (DELETE /customers/{customerID})
+	DeleteCustomerByID(c *gin.Context, customerID CustomerID, params DeleteCustomerByIDParams)
 	// Get a specific customer by ID
-	// (GET /customers/{customerId})
-	GetCustomersCustomerId(c *gin.Context, customerId int64)
+	// (GET /customers/{customerID})
+	GetCustomerByID(c *gin.Context, customerID CustomerID, params GetCustomerByIDParams)
 	// Update an existing customer
-	// (PUT /customers/{customerId})
-	PutCustomersCustomerId(c *gin.Context, customerId int64)
+	// (PUT /customers/{customerID})
+	UpdateCustomerByID(c *gin.Context, customerID CustomerID, params UpdateCustomerByIDParams)
 	// Get liveness status
 	// (GET /liveness)
 	GetLiveness(c *gin.Context, params GetLivenessParams)
 	// Get all orders
 	// (GET /orders)
-	GetOrders(c *gin.Context)
+	GetOrders(c *gin.Context, params GetOrdersParams)
 	// Create a new order
 	// (POST /orders)
-	PostOrders(c *gin.Context)
+	CreateOrder(c *gin.Context, params CreateOrderParams)
 	// Delete an order
-	// (DELETE /orders/{orderId})
-	DeleteOrdersOrderId(c *gin.Context, orderId int64)
+	// (DELETE /orders/{orderID})
+	DeleteOrderByID(c *gin.Context, orderID OrderID, params DeleteOrderByIDParams)
 	// Get a specific order by ID
-	// (GET /orders/{orderId})
-	GetOrdersOrderId(c *gin.Context, orderId int64)
+	// (GET /orders/{orderID})
+	GetOrderByID(c *gin.Context, orderID OrderID, params GetOrderByIDParams)
 	// Update an existing order
-	// (PUT /orders/{orderId})
-	PutOrdersOrderId(c *gin.Context, orderId int64)
+	// (PUT /orders/{orderID})
+	UpdateOrderByID(c *gin.Context, orderID OrderID, params UpdateOrderByIDParams)
 	// Get all products
 	// (GET /products)
-	GetProducts(c *gin.Context)
+	GetProducts(c *gin.Context, params GetProductsParams)
 	// Create a new product
 	// (POST /products)
-	PostProducts(c *gin.Context)
+	CreateProduct(c *gin.Context, params CreateProductParams)
 	// Delete a product
-	// (DELETE /products/{productId})
-	DeleteProductsProductId(c *gin.Context, productId int64)
+	// (DELETE /products/{productID})
+	DeleteProductByID(c *gin.Context, productID ProductID, params DeleteProductByIDParams)
 	// Get a specific product by ID
-	// (GET /products/{productId})
-	GetProductsProductId(c *gin.Context, productId int64)
+	// (GET /products/{productID})
+	GetProductByID(c *gin.Context, productID ProductID, params GetProductByIDParams)
 	// Update an existing product
-	// (PUT /products/{productId})
-	PutProductsProductId(c *gin.Context, productId int64)
+	// (PUT /products/{productID})
+	UpdateProductByID(c *gin.Context, productID ProductID, params UpdateProductByIDParams)
 	// Get readiness status
 	// (GET /readiness)
 	GetReadiness(c *gin.Context, params GetReadinessParams)
@@ -284,40 +384,48 @@ type MiddlewareFunc func(c *gin.Context)
 // GetCustomers operation middleware
 func (siw *ServerInterfaceWrapper) GetCustomers(c *gin.Context) {
 
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-		if c.IsAborted() {
-			return
-		}
-	}
-
-	siw.Handler.GetCustomers(c)
-}
-
-// PostCustomers operation middleware
-func (siw *ServerInterfaceWrapper) PostCustomers(c *gin.Context) {
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-		if c.IsAborted() {
-			return
-		}
-	}
-
-	siw.Handler.PostCustomers(c)
-}
-
-// DeleteCustomersCustomerId operation middleware
-func (siw *ServerInterfaceWrapper) DeleteCustomersCustomerId(c *gin.Context) {
-
 	var err error
 
-	// ------------- Path parameter "customerId" -------------
-	var customerId int64
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetCustomersParams
 
-	err = runtime.BindStyledParameter("simple", false, "customerId", c.Param("customerId"), &customerId)
+	// ------------- Optional query parameter "page" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "page", c.Request.URL.Query(), &params.Page)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter customerId: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter page: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "limit", c.Request.URL.Query(), &params.Limit)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter limit: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
 		return
 	}
 
@@ -328,20 +436,38 @@ func (siw *ServerInterfaceWrapper) DeleteCustomersCustomerId(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.DeleteCustomersCustomerId(c, customerId)
+	siw.Handler.GetCustomers(c, params)
 }
 
-// GetCustomersCustomerId operation middleware
-func (siw *ServerInterfaceWrapper) GetCustomersCustomerId(c *gin.Context) {
+// CreateCustomer operation middleware
+func (siw *ServerInterfaceWrapper) CreateCustomer(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "customerId" -------------
-	var customerId int64
+	// Parameter object where we will unmarshal all parameters from the context
+	var params CreateCustomerParams
 
-	err = runtime.BindStyledParameter("simple", false, "customerId", c.Param("customerId"), &customerId)
-	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter customerId: %w", err), http.StatusBadRequest)
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
 		return
 	}
 
@@ -352,20 +478,47 @@ func (siw *ServerInterfaceWrapper) GetCustomersCustomerId(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.GetCustomersCustomerId(c, customerId)
+	siw.Handler.CreateCustomer(c, params)
 }
 
-// PutCustomersCustomerId operation middleware
-func (siw *ServerInterfaceWrapper) PutCustomersCustomerId(c *gin.Context) {
+// DeleteCustomerByID operation middleware
+func (siw *ServerInterfaceWrapper) DeleteCustomerByID(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "customerId" -------------
-	var customerId int64
+	// ------------- Path parameter "customerID" -------------
+	var customerID CustomerID
 
-	err = runtime.BindStyledParameter("simple", false, "customerId", c.Param("customerId"), &customerId)
+	err = runtime.BindStyledParameter("simple", false, "customerID", c.Param("customerID"), &customerID)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter customerId: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter customerID: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params DeleteCustomerByIDParams
+
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
 		return
 	}
 
@@ -376,7 +529,109 @@ func (siw *ServerInterfaceWrapper) PutCustomersCustomerId(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.PutCustomersCustomerId(c, customerId)
+	siw.Handler.DeleteCustomerByID(c, customerID, params)
+}
+
+// GetCustomerByID operation middleware
+func (siw *ServerInterfaceWrapper) GetCustomerByID(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "customerID" -------------
+	var customerID CustomerID
+
+	err = runtime.BindStyledParameter("simple", false, "customerID", c.Param("customerID"), &customerID)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter customerID: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetCustomerByIDParams
+
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetCustomerByID(c, customerID, params)
+}
+
+// UpdateCustomerByID operation middleware
+func (siw *ServerInterfaceWrapper) UpdateCustomerByID(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "customerID" -------------
+	var customerID CustomerID
+
+	err = runtime.BindStyledParameter("simple", false, "customerID", c.Param("customerID"), &customerID)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter customerID: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params UpdateCustomerByIDParams
+
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.UpdateCustomerByID(c, customerID, params)
 }
 
 // GetLiveness operation middleware
@@ -424,40 +679,48 @@ func (siw *ServerInterfaceWrapper) GetLiveness(c *gin.Context) {
 // GetOrders operation middleware
 func (siw *ServerInterfaceWrapper) GetOrders(c *gin.Context) {
 
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-		if c.IsAborted() {
-			return
-		}
-	}
-
-	siw.Handler.GetOrders(c)
-}
-
-// PostOrders operation middleware
-func (siw *ServerInterfaceWrapper) PostOrders(c *gin.Context) {
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-		if c.IsAborted() {
-			return
-		}
-	}
-
-	siw.Handler.PostOrders(c)
-}
-
-// DeleteOrdersOrderId operation middleware
-func (siw *ServerInterfaceWrapper) DeleteOrdersOrderId(c *gin.Context) {
-
 	var err error
 
-	// ------------- Path parameter "orderId" -------------
-	var orderId int64
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetOrdersParams
 
-	err = runtime.BindStyledParameter("simple", false, "orderId", c.Param("orderId"), &orderId)
+	// ------------- Optional query parameter "page" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "page", c.Request.URL.Query(), &params.Page)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter orderId: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter page: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "limit", c.Request.URL.Query(), &params.Limit)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter limit: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
 		return
 	}
 
@@ -468,20 +731,38 @@ func (siw *ServerInterfaceWrapper) DeleteOrdersOrderId(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.DeleteOrdersOrderId(c, orderId)
+	siw.Handler.GetOrders(c, params)
 }
 
-// GetOrdersOrderId operation middleware
-func (siw *ServerInterfaceWrapper) GetOrdersOrderId(c *gin.Context) {
+// CreateOrder operation middleware
+func (siw *ServerInterfaceWrapper) CreateOrder(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "orderId" -------------
-	var orderId int64
+	// Parameter object where we will unmarshal all parameters from the context
+	var params CreateOrderParams
 
-	err = runtime.BindStyledParameter("simple", false, "orderId", c.Param("orderId"), &orderId)
-	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter orderId: %w", err), http.StatusBadRequest)
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
 		return
 	}
 
@@ -492,20 +773,47 @@ func (siw *ServerInterfaceWrapper) GetOrdersOrderId(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.GetOrdersOrderId(c, orderId)
+	siw.Handler.CreateOrder(c, params)
 }
 
-// PutOrdersOrderId operation middleware
-func (siw *ServerInterfaceWrapper) PutOrdersOrderId(c *gin.Context) {
+// DeleteOrderByID operation middleware
+func (siw *ServerInterfaceWrapper) DeleteOrderByID(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "orderId" -------------
-	var orderId int64
+	// ------------- Path parameter "orderID" -------------
+	var orderID OrderID
 
-	err = runtime.BindStyledParameter("simple", false, "orderId", c.Param("orderId"), &orderId)
+	err = runtime.BindStyledParameter("simple", false, "orderID", c.Param("orderID"), &orderID)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter orderId: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter orderID: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params DeleteOrderByIDParams
+
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
 		return
 	}
 
@@ -516,46 +824,156 @@ func (siw *ServerInterfaceWrapper) PutOrdersOrderId(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.PutOrdersOrderId(c, orderId)
+	siw.Handler.DeleteOrderByID(c, orderID, params)
+}
+
+// GetOrderByID operation middleware
+func (siw *ServerInterfaceWrapper) GetOrderByID(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "orderID" -------------
+	var orderID OrderID
+
+	err = runtime.BindStyledParameter("simple", false, "orderID", c.Param("orderID"), &orderID)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter orderID: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetOrderByIDParams
+
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetOrderByID(c, orderID, params)
+}
+
+// UpdateOrderByID operation middleware
+func (siw *ServerInterfaceWrapper) UpdateOrderByID(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "orderID" -------------
+	var orderID OrderID
+
+	err = runtime.BindStyledParameter("simple", false, "orderID", c.Param("orderID"), &orderID)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter orderID: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params UpdateOrderByIDParams
+
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.UpdateOrderByID(c, orderID, params)
 }
 
 // GetProducts operation middleware
 func (siw *ServerInterfaceWrapper) GetProducts(c *gin.Context) {
 
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-		if c.IsAborted() {
-			return
-		}
-	}
-
-	siw.Handler.GetProducts(c)
-}
-
-// PostProducts operation middleware
-func (siw *ServerInterfaceWrapper) PostProducts(c *gin.Context) {
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-		if c.IsAborted() {
-			return
-		}
-	}
-
-	siw.Handler.PostProducts(c)
-}
-
-// DeleteProductsProductId operation middleware
-func (siw *ServerInterfaceWrapper) DeleteProductsProductId(c *gin.Context) {
-
 	var err error
 
-	// ------------- Path parameter "productId" -------------
-	var productId int64
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetProductsParams
 
-	err = runtime.BindStyledParameter("simple", false, "productId", c.Param("productId"), &productId)
+	// ------------- Optional query parameter "page" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "page", c.Request.URL.Query(), &params.Page)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter productId: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter page: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "limit", c.Request.URL.Query(), &params.Limit)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter limit: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
 		return
 	}
 
@@ -566,20 +984,38 @@ func (siw *ServerInterfaceWrapper) DeleteProductsProductId(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.DeleteProductsProductId(c, productId)
+	siw.Handler.GetProducts(c, params)
 }
 
-// GetProductsProductId operation middleware
-func (siw *ServerInterfaceWrapper) GetProductsProductId(c *gin.Context) {
+// CreateProduct operation middleware
+func (siw *ServerInterfaceWrapper) CreateProduct(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "productId" -------------
-	var productId int64
+	// Parameter object where we will unmarshal all parameters from the context
+	var params CreateProductParams
 
-	err = runtime.BindStyledParameter("simple", false, "productId", c.Param("productId"), &productId)
-	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter productId: %w", err), http.StatusBadRequest)
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
 		return
 	}
 
@@ -590,20 +1026,47 @@ func (siw *ServerInterfaceWrapper) GetProductsProductId(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.GetProductsProductId(c, productId)
+	siw.Handler.CreateProduct(c, params)
 }
 
-// PutProductsProductId operation middleware
-func (siw *ServerInterfaceWrapper) PutProductsProductId(c *gin.Context) {
+// DeleteProductByID operation middleware
+func (siw *ServerInterfaceWrapper) DeleteProductByID(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "productId" -------------
-	var productId int64
+	// ------------- Path parameter "productID" -------------
+	var productID ProductID
 
-	err = runtime.BindStyledParameter("simple", false, "productId", c.Param("productId"), &productId)
+	err = runtime.BindStyledParameter("simple", false, "productID", c.Param("productID"), &productID)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter productId: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter productID: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params DeleteProductByIDParams
+
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
 		return
 	}
 
@@ -614,7 +1077,109 @@ func (siw *ServerInterfaceWrapper) PutProductsProductId(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.PutProductsProductId(c, productId)
+	siw.Handler.DeleteProductByID(c, productID, params)
+}
+
+// GetProductByID operation middleware
+func (siw *ServerInterfaceWrapper) GetProductByID(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "productID" -------------
+	var productID ProductID
+
+	err = runtime.BindStyledParameter("simple", false, "productID", c.Param("productID"), &productID)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter productID: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetProductByIDParams
+
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetProductByID(c, productID, params)
+}
+
+// UpdateProductByID operation middleware
+func (siw *ServerInterfaceWrapper) UpdateProductByID(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "productID" -------------
+	var productID ProductID
+
+	err = runtime.BindStyledParameter("simple", false, "productID", c.Param("productID"), &productID)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter productID: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params UpdateProductByIDParams
+
+	headers := c.Request.Header
+
+	// ------------- Required header parameter "xRequestID" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
+		var XRequestID XRequestID
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandler(c, fmt.Errorf("Expected one value for xRequestID, got %d", n), http.StatusBadRequest)
+			return
+		}
+
+		err = runtime.BindStyledParameterWithLocation("simple", false, "xRequestID", runtime.ParamLocationHeader, valueList[0], &XRequestID)
+		if err != nil {
+			siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter xRequestID: %w", err), http.StatusBadRequest)
+			return
+		}
+
+		params.XRequestID = XRequestID
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.UpdateProductByID(c, productID, params)
 }
 
 // GetReadiness operation middleware
@@ -687,62 +1252,63 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	}
 
 	router.GET(options.BaseURL+"/customers", wrapper.GetCustomers)
-	router.POST(options.BaseURL+"/customers", wrapper.PostCustomers)
-	router.DELETE(options.BaseURL+"/customers/:customerId", wrapper.DeleteCustomersCustomerId)
-	router.GET(options.BaseURL+"/customers/:customerId", wrapper.GetCustomersCustomerId)
-	router.PUT(options.BaseURL+"/customers/:customerId", wrapper.PutCustomersCustomerId)
+	router.POST(options.BaseURL+"/customers", wrapper.CreateCustomer)
+	router.DELETE(options.BaseURL+"/customers/:customerID", wrapper.DeleteCustomerByID)
+	router.GET(options.BaseURL+"/customers/:customerID", wrapper.GetCustomerByID)
+	router.PUT(options.BaseURL+"/customers/:customerID", wrapper.UpdateCustomerByID)
 	router.GET(options.BaseURL+"/liveness", wrapper.GetLiveness)
 	router.GET(options.BaseURL+"/orders", wrapper.GetOrders)
-	router.POST(options.BaseURL+"/orders", wrapper.PostOrders)
-	router.DELETE(options.BaseURL+"/orders/:orderId", wrapper.DeleteOrdersOrderId)
-	router.GET(options.BaseURL+"/orders/:orderId", wrapper.GetOrdersOrderId)
-	router.PUT(options.BaseURL+"/orders/:orderId", wrapper.PutOrdersOrderId)
+	router.POST(options.BaseURL+"/orders", wrapper.CreateOrder)
+	router.DELETE(options.BaseURL+"/orders/:orderID", wrapper.DeleteOrderByID)
+	router.GET(options.BaseURL+"/orders/:orderID", wrapper.GetOrderByID)
+	router.PUT(options.BaseURL+"/orders/:orderID", wrapper.UpdateOrderByID)
 	router.GET(options.BaseURL+"/products", wrapper.GetProducts)
-	router.POST(options.BaseURL+"/products", wrapper.PostProducts)
-	router.DELETE(options.BaseURL+"/products/:productId", wrapper.DeleteProductsProductId)
-	router.GET(options.BaseURL+"/products/:productId", wrapper.GetProductsProductId)
-	router.PUT(options.BaseURL+"/products/:productId", wrapper.PutProductsProductId)
+	router.POST(options.BaseURL+"/products", wrapper.CreateProduct)
+	router.DELETE(options.BaseURL+"/products/:productID", wrapper.DeleteProductByID)
+	router.GET(options.BaseURL+"/products/:productID", wrapper.GetProductByID)
+	router.PUT(options.BaseURL+"/products/:productID", wrapper.UpdateProductByID)
 	router.GET(options.BaseURL+"/readiness", wrapper.GetReadiness)
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"PQAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
