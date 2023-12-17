@@ -14,20 +14,37 @@ jobs:
         with:
           go-version: ^1.19
 
-      - name: Verify dependencies
-        run: go mod verify
+      - name: Verify Orders dependencies
+        working-directory: ./orders
+        run: | 
+          cd ./orders
+          go mod verify
 
-      - name: Build
-        run: go build -v ./...
+      - name: Build Orders
+        working-directory: ./orders
+        run: | 
+          cd ./orders
+          go build -v ./...
 
-      - name: Run go vet
-        run: go vet ./...
+      - name: Run go vet Orders
+        working-directory: ./orders
+        run: |
+          cd ./orders
+          go vet ./...
 
       - name: Install golint
         run: go install golang.org/x/lint/golint@latest
 
       - name: Run golint
-        run: golint ./...
+        working-directory: ./orders
+        run: |
+          cd ./orders
+          
+          golint ./...
 
       - name: Run tests
-        run: go test -race -vet=off ./...
+        working-directory: ./orders
+        run: | 
+          cd ./orders
+          
+          go test -race -vet=off ./...
