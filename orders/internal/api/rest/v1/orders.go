@@ -156,7 +156,7 @@ func (o *OrdersServer) GetLiveness(c *gin.Context, params GetLivenessParams) {
 	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "OK",
+		"message": "UP",
 	})
 
 }

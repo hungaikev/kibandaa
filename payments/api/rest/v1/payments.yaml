@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   title: Payment Service API
   description: Handles payments through M-Pesa and provides callback endpoints
@@ -13,73 +13,157 @@ tags:
     description: Operations related to payments
 
 paths:
-  /payments/initiate:
-    post:
+  /liveness:
+    get:
       tags:
-        - Payments
-      summary: Initiate a payment through M-Pesa
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PaymentRequest'
+        - Liveness
+      summary: Get liveness status
+      operationId: getLiveness
+      parameters:
+        - $ref: '#/components/parameters/X-RequestID'
       responses:
         '200':
-          description: Payment initiated successfully
+          description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaymentResponse'
-
+                $ref: '#/components/schemas/Liveness'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
   /payments/callback:
     post:
       tags:
         - Payments
       summary: Callback endpoint for M-Pesa payment updates
+      operationId: postPaymentCallback
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PaymentCallback'
+              $ref: '#/components/schemas/MpesaCallbackMessage'
       responses:
         '200':
           description: Callback received successfully
 
 components:
+  parameters:
+    X-RequestID:
+      name: X-Request-ID
+      in: header
+      description: X-Request-ID
+      required: false
+      schema:
+        $ref: '#/components/schemas/X-RequestID'
   schemas:
-    PaymentRequest:
+    Liveness:
       type: object
       properties:
-        orderId:
+        status:
+          type: string
+          enum: [ UP, DOWN ]
+          x-oapi-codegen-extra-tags:
+            validate: required,oneof=UP DOWN
+        message:
+          type: string
+          x-oapi-codegen-extra-tags:
+            validate: required
+    X-RequestID:
+      x-go-type: uuid.UUID
+      description: X-RequestID
+      x-go-name: XRequestIdType
+      x-go-type-import:
+        name: uuid
+        path: github.com/google/uuid
+    MpesaCallbackMessage:
+      type: object
+      properties:
+        transactionType:
+          type: string
+        transID:
+          type: string
+        transAmount:
+          type: string
+        businessShortCode:
+          type: string
+        billRefNumber:
+          type: string
+        invoiceNumber:
+          type: string
+        orgAccountBalance:
+          type: string
+        thirdPartyTransID:
+          type: string
+        msisdn:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        transactionStatus:
+          type: string
+        resultCode:
+          type: string
+        resultDesc:
+          type: string
+    Error:
+      title: Error
+      description: General API Error Response
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+        reason:
+          type: string
+        domain:
+          type: string
+        code:
           type: integer
-          format: int64
-        amount:
-          type: number
-          format: float
-      required:
-        - orderId
-        - amount
-
-    PaymentResponse:
-      type: object
-      properties:
-        transactionId:
+        timestamp:
           type: string
-        status:
-          type: string
-      required:
-        - transactionId
-        - status
-
-    PaymentCallback:
-      type: object
-      properties:
-        transactionId:
-          type: string
-        status:
-          type: string
-      required:
-        - transactionId
-        - status
+          format: date-time
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
