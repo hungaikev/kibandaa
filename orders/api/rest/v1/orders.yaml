@@ -424,7 +424,7 @@ components:
     X-RequestID:
       name: xRequestID
       in: header
-      required: true
+      required: false
       description: X-Request-ID
       schema:
         $ref: '#/components/schemas/X-RequestID'
@@ -464,7 +464,7 @@ components:
         name: uuid
         path: github.com/google/uuid
       x-oapi-codegen-extra-tags:
-        validate: required,x-requestID
+        validate: omitempty
     Order:
       type: object
       properties:

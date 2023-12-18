@@ -194,37 +194,37 @@ type GetCustomersParams struct {
 	Limit *Limit `form:"limit,omitempty" json:"limit,omitempty" schema:"limit" validate:"omitempty,gte=0"`
 
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // CreateCustomerParams defines parameters for CreateCustomer.
 type CreateCustomerParams struct {
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // DeleteCustomerByIDParams defines parameters for DeleteCustomerByID.
 type DeleteCustomerByIDParams struct {
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // GetCustomerByIDParams defines parameters for GetCustomerByID.
 type GetCustomerByIDParams struct {
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // UpdateCustomerByIDParams defines parameters for UpdateCustomerByID.
 type UpdateCustomerByIDParams struct {
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // GetLivenessParams defines parameters for GetLiveness.
 type GetLivenessParams struct {
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // GetOrdersParams defines parameters for GetOrders.
@@ -233,31 +233,31 @@ type GetOrdersParams struct {
 	Limit *Limit `form:"limit,omitempty" json:"limit,omitempty" schema:"limit" validate:"omitempty,gte=0"`
 
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // CreateOrderParams defines parameters for CreateOrder.
 type CreateOrderParams struct {
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // DeleteOrderByIDParams defines parameters for DeleteOrderByID.
 type DeleteOrderByIDParams struct {
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // GetOrderByIDParams defines parameters for GetOrderByID.
 type GetOrderByIDParams struct {
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // UpdateOrderByIDParams defines parameters for UpdateOrderByID.
 type UpdateOrderByIDParams struct {
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // GetProductsParams defines parameters for GetProducts.
@@ -266,37 +266,37 @@ type GetProductsParams struct {
 	Limit *Limit `form:"limit,omitempty" json:"limit,omitempty" schema:"limit" validate:"omitempty,gte=0"`
 
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // CreateProductParams defines parameters for CreateProduct.
 type CreateProductParams struct {
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // DeleteProductByIDParams defines parameters for DeleteProductByID.
 type DeleteProductByIDParams struct {
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // GetProductByIDParams defines parameters for GetProductByID.
 type GetProductByIDParams struct {
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // UpdateProductByIDParams defines parameters for UpdateProductByID.
 type UpdateProductByIDParams struct {
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // GetReadinessParams defines parameters for GetReadiness.
 type GetReadinessParams struct {
 	// XRequestID X-Request-ID
-	XRequestID XRequestID `json:"xRequestID"`
+	XRequestID *XRequestID `json:"xRequestID,omitempty"`
 }
 
 // CreateCustomerJSONRequestBody defines body for CreateCustomer for application/json ContentType.
@@ -407,7 +407,7 @@ func (siw *ServerInterfaceWrapper) GetCustomers(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -422,11 +422,8 @@ func (siw *ServerInterfaceWrapper) GetCustomers(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -449,7 +446,7 @@ func (siw *ServerInterfaceWrapper) CreateCustomer(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -464,11 +461,8 @@ func (siw *ServerInterfaceWrapper) CreateCustomer(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -500,7 +494,7 @@ func (siw *ServerInterfaceWrapper) DeleteCustomerByID(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -515,11 +509,8 @@ func (siw *ServerInterfaceWrapper) DeleteCustomerByID(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -551,7 +542,7 @@ func (siw *ServerInterfaceWrapper) GetCustomerByID(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -566,11 +557,8 @@ func (siw *ServerInterfaceWrapper) GetCustomerByID(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -602,7 +590,7 @@ func (siw *ServerInterfaceWrapper) UpdateCustomerByID(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -617,11 +605,8 @@ func (siw *ServerInterfaceWrapper) UpdateCustomerByID(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -644,7 +629,7 @@ func (siw *ServerInterfaceWrapper) GetLiveness(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -659,11 +644,8 @@ func (siw *ServerInterfaceWrapper) GetLiveness(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -702,7 +684,7 @@ func (siw *ServerInterfaceWrapper) GetOrders(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -717,11 +699,8 @@ func (siw *ServerInterfaceWrapper) GetOrders(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -744,7 +723,7 @@ func (siw *ServerInterfaceWrapper) CreateOrder(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -759,11 +738,8 @@ func (siw *ServerInterfaceWrapper) CreateOrder(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -795,7 +771,7 @@ func (siw *ServerInterfaceWrapper) DeleteOrderByID(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -810,11 +786,8 @@ func (siw *ServerInterfaceWrapper) DeleteOrderByID(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -846,7 +819,7 @@ func (siw *ServerInterfaceWrapper) GetOrderByID(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -861,11 +834,8 @@ func (siw *ServerInterfaceWrapper) GetOrderByID(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -897,7 +867,7 @@ func (siw *ServerInterfaceWrapper) UpdateOrderByID(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -912,11 +882,8 @@ func (siw *ServerInterfaceWrapper) UpdateOrderByID(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -955,7 +922,7 @@ func (siw *ServerInterfaceWrapper) GetProducts(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -970,11 +937,8 @@ func (siw *ServerInterfaceWrapper) GetProducts(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -997,7 +961,7 @@ func (siw *ServerInterfaceWrapper) CreateProduct(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -1012,11 +976,8 @@ func (siw *ServerInterfaceWrapper) CreateProduct(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -1048,7 +1009,7 @@ func (siw *ServerInterfaceWrapper) DeleteProductByID(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -1063,11 +1024,8 @@ func (siw *ServerInterfaceWrapper) DeleteProductByID(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -1099,7 +1057,7 @@ func (siw *ServerInterfaceWrapper) GetProductByID(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -1114,11 +1072,8 @@ func (siw *ServerInterfaceWrapper) GetProductByID(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -1150,7 +1105,7 @@ func (siw *ServerInterfaceWrapper) UpdateProductByID(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -1165,11 +1120,8 @@ func (siw *ServerInterfaceWrapper) UpdateProductByID(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -1192,7 +1144,7 @@ func (siw *ServerInterfaceWrapper) GetReadiness(c *gin.Context) {
 
 	headers := c.Request.Header
 
-	// ------------- Required header parameter "xRequestID" -------------
+	// ------------- Optional header parameter "xRequestID" -------------
 	if valueList, found := headers[http.CanonicalHeaderKey("xRequestID")]; found {
 		var XRequestID XRequestID
 		n := len(valueList)
@@ -1207,11 +1159,8 @@ func (siw *ServerInterfaceWrapper) GetReadiness(c *gin.Context) {
 			return
 		}
 
-		params.XRequestID = XRequestID
+		params.XRequestID = &XRequestID
 
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Header parameter xRequestID is required, but not found"), http.StatusBadRequest)
-		return
 	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -1273,42 +1222,42 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
-	"PQAA",
+	"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",
+	"AAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

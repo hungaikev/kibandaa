@@ -54,7 +54,7 @@ func run(log *zerolog.Logger) error {
 	var cfg struct {
 		conf.Version
 		Web struct {
-			APIHost         string        `conf:"default:9000"`
+			APIPort         string        `conf:"default:8000"`
 			ShutdownTimeout time.Duration `conf:"default:10s"`
 		}
 	}
@@ -107,7 +107,7 @@ func run(log *zerolog.Logger) error {
 
 	ordersServer := api.NewOrdersServer(log, build, store)
 
-	api := handlers.API(ordersServer, cfg.Web.APIHost)
+	server := handlers.API(ordersServer, cfg.Web.APIPort)
 
 	// Make a channel to listen for errors coming from the listener. Use a
 	// buffered channel so the goroutine can exit if we don't collect this error.
@@ -115,8 +115,8 @@ func run(log *zerolog.Logger) error {
 
 	// Start the service listening for requests.
 	go func() {
-		log.Info().Msgf("main: API listening on %s", api.Addr)
-		serverErrors <- api.ListenAndServe()
+		log.Info().Msgf("main: API listening on %s", server.Addr)
+		serverErrors <- server.ListenAndServe()
 	}()
 
 	// =========================================================================
@@ -135,8 +135,8 @@ func run(log *zerolog.Logger) error {
 		defer cancel()
 
 		// Asking listener to shut down and shed load.
-		if err := api.Shutdown(ctx); err != nil {
-			if err := api.Close(); err != nil {
+		if err := server.Shutdown(ctx); err != nil {
+			if err := server.Close(); err != nil {
 				return errors.Wrap(err, "could not stop server gracefully")
 			}
 			return errors.Wrap(err, "could not stop server")

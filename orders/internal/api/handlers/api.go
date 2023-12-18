@@ -12,6 +12,7 @@ import (
 	api "github.com/hungaikev/kibandaa/orders/internal/api/rest/v1"
 )
 
+// API constructs a new http.Server with the API routes set up
 func API(ordersServer *api.OrdersServer, port string) *http.Server {
 	swagger, err := api.GetSwagger()
 	if err != nil {
