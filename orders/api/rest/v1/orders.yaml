@@ -403,21 +403,21 @@ components:
     CustomerID:
       name: customerID
       in: path
-      required: true
+      required: false
       description: ID of the customer
       schema:
         $ref: '#/components/schemas/CustomerID'
     OrderID:
       name: orderID
       in: path
-      required: true
+      required: false
       description: ID of the order
       schema:
         $ref: '#/components/schemas/OrderID'
     ProductID:
       name: productID
       in: path
-      required: true
+      required: false
       description: ID of the product
       schema:
         $ref: '#/components/schemas/ProductID'
@@ -436,8 +436,6 @@ components:
       x-go-type-import:
         name: uuid
         path: github.com/google/uuid
-      x-oapi-codegen-extra-tags:
-        validate: required,customerID
     OrderID:
       x-go-type: uuid.UUID
       description: OrderID
@@ -445,8 +443,6 @@ components:
       x-go-type-import:
         name: uuid
         path: github.com/google/uuid
-      x-oapi-codegen-extra-tags:
-        validate: required,orderID
     ProductID:
       x-go-type: uuid.UUID
       description: ProductID
@@ -454,8 +450,6 @@ components:
       x-go-type-import:
         name: uuid
         path: github.com/google/uuid
-      x-oapi-codegen-extra-tags:
-        validate: required,productID
     X-RequestID:
       x-go-type: uuid.UUID
       description: X-RequestID

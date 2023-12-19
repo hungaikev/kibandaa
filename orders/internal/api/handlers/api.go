@@ -7,8 +7,6 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
-	middleware "github.com/oapi-codegen/gin-middleware"
-
 	api "github.com/hungaikev/kibandaa/orders/internal/api/rest/v1"
 )
 
@@ -27,7 +25,7 @@ func API(ordersServer *api.OrdersServer, port string) *http.Server {
 
 	r := gin.Default()
 
-	r.Use(middleware.OapiRequestValidator(swagger))
+	// r.Use(middleware.OapiRequestValidator(swagger))
 	r.Use(cors.Default())
 	r.Use(requestid.New())
 

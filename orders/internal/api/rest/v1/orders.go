@@ -17,7 +17,6 @@ type OrdersServer struct {
 // GetCustomers returns a list of customers
 func (o *OrdersServer) GetCustomers(c *gin.Context, params GetCustomersParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	customers, err := o.storage.GetCustomers(ctx)
 	if err != nil {
@@ -33,7 +32,6 @@ func (o *OrdersServer) GetCustomers(c *gin.Context, params GetCustomersParams) {
 // CreateCustomer creates a new customer
 func (o *OrdersServer) CreateCustomer(c *gin.Context, params CreateCustomerParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	var customerRequest NewCustomerRequest
 	if err := c.BindJSON(&customerRequest); err != nil {
@@ -65,7 +63,6 @@ func (o *OrdersServer) CreateCustomer(c *gin.Context, params CreateCustomerParam
 // DeleteCustomerByID deletes a customer by ID
 func (o *OrdersServer) DeleteCustomerByID(c *gin.Context, customerID CustomerID, params DeleteCustomerByIDParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	custID, err := uuid.Parse(customerID.String())
 	if err != nil {
@@ -91,7 +88,6 @@ func (o *OrdersServer) DeleteCustomerByID(c *gin.Context, customerID CustomerID,
 // GetCustomerByID returns a customer by ID
 func (o *OrdersServer) GetCustomerByID(c *gin.Context, customerID CustomerID, params GetCustomerByIDParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	custID, err := uuid.Parse(customerID.String())
 	if err != nil {
@@ -115,7 +111,6 @@ func (o *OrdersServer) GetCustomerByID(c *gin.Context, customerID CustomerID, pa
 // UpdateCustomerByID updates a customer by ID
 func (o *OrdersServer) UpdateCustomerByID(c *gin.Context, customerID CustomerID, params UpdateCustomerByIDParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	custID, err := uuid.Parse(customerID.String())
 	if err != nil {
@@ -153,7 +148,6 @@ func (o *OrdersServer) UpdateCustomerByID(c *gin.Context, customerID CustomerID,
 
 // GetLiveness returns a 200 OK response
 func (o *OrdersServer) GetLiveness(c *gin.Context, params GetLivenessParams) {
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "UP",
@@ -164,7 +158,6 @@ func (o *OrdersServer) GetLiveness(c *gin.Context, params GetLivenessParams) {
 // GetOrders returns a list of orders
 func (o *OrdersServer) GetOrders(c *gin.Context, params GetOrdersParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	orders, err := o.storage.GetOrders(ctx)
 	if err != nil {
@@ -181,7 +174,6 @@ func (o *OrdersServer) GetOrders(c *gin.Context, params GetOrdersParams) {
 // CreateOrder creates a new order
 func (o *OrdersServer) CreateOrder(c *gin.Context, params CreateOrderParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	var orderRequest NewOrderRequest
 	if err := c.BindJSON(&orderRequest); err != nil {
@@ -227,7 +219,6 @@ func (o *OrdersServer) CreateOrder(c *gin.Context, params CreateOrderParams) {
 // DeleteOrderByID deletes an order by ID
 func (o *OrdersServer) DeleteOrderByID(c *gin.Context, orderID OrderID, params DeleteOrderByIDParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	ordID, err := uuid.Parse(orderID.String())
 	if err != nil {
@@ -253,7 +244,6 @@ func (o *OrdersServer) DeleteOrderByID(c *gin.Context, orderID OrderID, params D
 // GetOrderByID returns an order by ID
 func (o *OrdersServer) GetOrderByID(c *gin.Context, orderID OrderID, params GetOrderByIDParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	ordID, err := uuid.Parse(orderID.String())
 	if err != nil {
@@ -277,7 +267,6 @@ func (o *OrdersServer) GetOrderByID(c *gin.Context, orderID OrderID, params GetO
 // UpdateOrderByID updates an order by ID
 func (o *OrdersServer) UpdateOrderByID(c *gin.Context, orderID OrderID, params UpdateOrderByIDParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	ordID, err := uuid.Parse(orderID.String())
 	if err != nil {
@@ -312,7 +301,6 @@ func (o *OrdersServer) UpdateOrderByID(c *gin.Context, orderID OrderID, params U
 // GetProducts returns a list of products
 func (o *OrdersServer) GetProducts(c *gin.Context, params GetProductsParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	products, err := o.storage.GetProducts(ctx)
 	if err != nil {
@@ -328,7 +316,6 @@ func (o *OrdersServer) GetProducts(c *gin.Context, params GetProductsParams) {
 // CreateProduct creates a new product
 func (o *OrdersServer) CreateProduct(c *gin.Context, params CreateProductParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	var productRequest NewProduct
 	if err := c.BindJSON(&productRequest); err != nil {
@@ -358,7 +345,6 @@ func (o *OrdersServer) CreateProduct(c *gin.Context, params CreateProductParams)
 // DeleteProductByID deletes a product by ID
 func (o *OrdersServer) DeleteProductByID(c *gin.Context, productID ProductID, params DeleteProductByIDParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	prodID, err := uuid.Parse(productID.String())
 	if err != nil {
@@ -384,7 +370,6 @@ func (o *OrdersServer) DeleteProductByID(c *gin.Context, productID ProductID, pa
 // GetProductByID returns a product by ID
 func (o *OrdersServer) GetProductByID(c *gin.Context, productID ProductID, params GetProductByIDParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	prodID, err := uuid.Parse(productID.String())
 	if err != nil {
@@ -408,7 +393,6 @@ func (o *OrdersServer) GetProductByID(c *gin.Context, productID ProductID, param
 // UpdateProductByID updates a product by ID
 func (o *OrdersServer) UpdateProductByID(c *gin.Context, productID ProductID, params UpdateProductByIDParams) {
 	ctx := c.Request.Context()
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	prodID, err := uuid.Parse(productID.String())
 	if err != nil {
@@ -441,7 +425,6 @@ func (o *OrdersServer) UpdateProductByID(c *gin.Context, productID ProductID, pa
 
 // GetReadiness returns a 200 OK response
 func (o *OrdersServer) GetReadiness(c *gin.Context, params GetReadinessParams) {
-	o.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "OK",

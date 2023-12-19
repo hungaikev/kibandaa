@@ -95,7 +95,7 @@ func run(log *zerolog.Logger) error {
 	signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM)
 
 	// Create a connection to the database.
-	firestoreClient, err := firestore.NewClient(context.Background(), "kibandaa")
+	firestoreClient, err := firestore.NewClient(context.Background(), "kibandaa-236d4")
 	if err != nil {
 		return errors.Wrap(err, "could not create firestore client")
 	}
