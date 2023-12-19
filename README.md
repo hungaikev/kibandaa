@@ -8,7 +8,7 @@ The Payment service is a REST API that allows you to receive a callback from Mpe
 
 ### API Documentation
 
-API Documentation is written in OpenAPI3, and is located in the `products/api` directory of this project. You can copy / import this file into a live editor, such as [Swagger's Online Editor](https://editor.swagger.io/), and see more information about the endpoints, parameters and response types.
+API Documentation is written in OpenAPI3, and is located in the `payments/api` directory of this project. You can copy / import this file into a live editor, such as [Swagger's Online Editor](https://editor.swagger.io/), and see more information about the endpoints, parameters and response types.
 
 ### Precursor
 
