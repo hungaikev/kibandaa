@@ -114,7 +114,7 @@ This project uses [OpenAPI v3](https://spec.openapis.org/oas/v3.1.0), [Deepmap's
 Workflow:
 
 1. All changes to any part of the REST API must start from the OpenAPI specs in the projects `orders/api` directory.
-2. Run `version=v1 make generate-api` which will call the code generator and overwrite the `api.gen.go` file(s).
+2. Run `version=v1 make order-generate-api` which will call the code generator and overwrite the `api.gen.go` file(s).
 3. Make required changes to the code that is implementing the server endpoints.
 
 ### Testing the endpoints
