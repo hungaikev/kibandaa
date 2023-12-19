@@ -116,3 +116,20 @@ Workflow:
 1. All changes to any part of the REST API must start from the OpenAPI specs in the projects `orders/api` directory.
 2. Run `version=v1 make generate-api` which will call the code generator and overwrite the `api.gen.go` file(s).
 3. Make required changes to the code that is implementing the server endpoints.
+
+### Testing the endpoints
+
+#### Customers endpoints
+
+```bash 
+
+curl --location 'localhost:8000/customers' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "hungaikevin@gmail.com",
+    "name": "Hungai Amuhinda",
+    "phone": "254724490814"
+}'
+
+```
+
