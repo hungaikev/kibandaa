@@ -41,7 +41,7 @@ func main() {
 
 func run(log *zerolog.Logger) error {
 
-	log.Info().Msg("Welcome to the Order Service :)")
+	log.Info().Msg("Welcome to the Payments Service :)")
 
 	// =========================================================================
 	// Configuration
@@ -60,7 +60,7 @@ func run(log *zerolog.Logger) error {
 	}
 
 	cfg.Version.Build = build
-	cfg.Version.Desc = "Order Service"
+	cfg.Version.Desc = "Payments Service"
 
 	// =========================================================================
 	// App Starting
