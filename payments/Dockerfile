@@ -45,15 +45,11 @@ WORKDIR /root/
 
 # Copy the Pre-built binary file from the previous stage.
 COPY --from=builder /app/main .
-# Copy the migration folder from the previous stage.
-COPY --from=builder /app/internal/storage/db/migrations ./internal/storage/db/migrations
-# Copy migrate
-COPY --from=builder /usr/bin/migrate /usr/bin/migrate
 # Copy Wait for it
 COPY --from=builder /app/wait-for .
 
-# Expose port 9090 to the outside world
-EXPOSE 9090
+# Expose port 8000 to the outside world
+EXPOSE 8000
 
 #Command to run the executable
 CMD ["./main"]
