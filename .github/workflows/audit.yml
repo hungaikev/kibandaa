@@ -22,9 +22,19 @@ jobs:
           cd  orders
           go mod verify
 
+      - name: Verify Payments dependencies
+        run: | 
+          cd  payments
+          go mod verify
+
       - name: Build Orders
         run: | 
           cd orders
+          go build -v ./...
+
+      - name: Build Payments
+        run: | 
+          cd payments
           go build -v ./...
 
       - name: Run go vet Orders
@@ -32,17 +42,30 @@ jobs:
           cd orders
           go vet ./...
 
+      - name: Run go vet Payments
+        run: |
+          cd payments
+          go vet ./...
+
       - name: Install golint
         run: go install golang.org/x/lint/golint@latest
 
-      - name: Run golint
+      - name: Run golint Orders
         run: |
           cd orders
-          
           golint ./...
 
-      - name: Run tests
+      - name: Run golint Payments
+        run: |
+          cd payments
+          golint ./...
+
+      - name: Run Order tests
         run: | 
           cd orders
-          
+          go test -race -vet=off ./...
+
+      - name: Run Payments tests
+        run: | 
+          cd payments 
           go test -race -vet=off ./...

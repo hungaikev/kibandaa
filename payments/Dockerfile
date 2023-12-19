@@ -16,11 +16,6 @@ LABEL maintainer="Hungai Amuhinda <hungaikevin@gmail.com>"
 RUN apk update && apk add --no-cache git curl
 
 
-# Install golang migrate
-RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.12.2/migrate.linux-amd64.tar.gz | tar xvz
-RUN mv migrate.linux-amd64 /usr/bin/migrate
-
-
 # Set the current working directory inside the container
 WORKDIR /app
 
@@ -34,7 +29,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-X main.build=${VCS_REF}" -a -installsuffix cgo -o main ./cmd/products/*.go
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-X main.build=${VCS_REF}" -a -installsuffix cgo -o main ./cmd/payments/*.go
 
 
 # Start a new stage from scratch

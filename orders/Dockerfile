@@ -15,12 +15,6 @@ LABEL maintainer="Hungai Amuhinda <hungaikevin@gmail.com>"
 # Git is required for fetching the dependencies.
 RUN apk update && apk add --no-cache git curl
 
-
-# Install golang migrate
-RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.12.2/migrate.linux-amd64.tar.gz | tar xvz
-RUN mv migrate.linux-amd64 /usr/bin/migrate
-
-
 # Set the current working directory inside the container
 WORKDIR /app
 
