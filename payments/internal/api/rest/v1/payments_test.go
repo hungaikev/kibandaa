@@ -2,12 +2,13 @@ package v1
 
 import (
 	"bytes"
-	"github.com/gin-gonic/gin"
-	"github.com/rs/zerolog"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetLiveness(t *testing.T) {
