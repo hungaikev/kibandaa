@@ -12,7 +12,6 @@ type PaymentsServer struct {
 
 // GetLiveness returns a simple UP message to indicate the service is running.
 func (p *PaymentsServer) GetLiveness(c *gin.Context, params GetLivenessParams) {
-	p.Log.Info().Msgf("Request ID: %s", params.XRequestID.String())
 
 	c.JSON(200, gin.H{
 		"message": "UP",
@@ -21,9 +20,6 @@ func (p *PaymentsServer) GetLiveness(c *gin.Context, params GetLivenessParams) {
 
 // PostPaymentCallback handles the callback from the payment provider.
 func (p *PaymentsServer) PostPaymentCallback(c *gin.Context) {
-	ctx := c.Request.Context()
-	p.Log.Info().Msgf("Request ID: %s", ctx.Value("request_id"))
-
 	var callbackMessage MpesaCallbackMessage
 	if err := c.ShouldBindJSON(&callbackMessage); err != nil {
 		p.Log.Error().Err(err).Msg("failed to parse callback message")
