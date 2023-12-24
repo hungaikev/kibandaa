@@ -57,6 +57,9 @@ func run(log *zerolog.Logger) error {
 			APIPort         string        `conf:"default:8000"`
 			ShutdownTimeout time.Duration `conf:"default:10s"`
 		}
+		Google struct {
+			ProjectID string `conf:"default:kibandaa-236d4"`
+		}
 	}
 
 	cfg.Version.Build = build
