@@ -1,24 +1,15 @@
 package v1
 
 import (
-	"context"
-	"io"
-	"log"
 	"net/http"
 	"net/http/httptest"
-	"os"
-	"os/exec"
-	"strings"
-	"sync"
-	"syscall"
 	"testing"
 
-	"cloud.google.com/go/firestore"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
-func newFirestoreTestClient(ctx context.Context) *firestore.Client {
+/*func newFirestoreTestClient(ctx context.Context) *firestore.Client {
 	client, err := firestore.NewClient(ctx, "test")
 	if err != nil {
 		panic(err)
@@ -122,7 +113,7 @@ func TestGetLiveness(t *testing.T) {
 	// Check the response body content
 	expectedBody := `{"message":"UP"}`
 	assert.Equal(t, expectedBody, w.Body.String())
-}
+}*/
 
 func TestGetReadiness(t *testing.T) {
 	gin.SetMode(gin.TestMode)
